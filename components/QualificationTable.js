@@ -15,14 +15,15 @@ const QualificationTable = ({ quiz }) => {
                 // Mapear las calificaciones y aplicar createData a cada una
                 const processedQualifications = quizQualifications.map((qualification, index) => {
                     const position = index + 1;
+                    const dateTime = qualification.resolutionDateTime || [0, 0, 0, 0, 0];
                     return createData(
                         qualification.userMail,
                         qualification.correctAnswers,
-                        qualification.resolutionDateTime[0],
-                        qualification.resolutionDateTime[1],
-                        qualification.resolutionDateTime[2],
-                        qualification.resolutionDateTime[3],
-                        qualification.resolutionDateTime[4],
+                        dateTime[0] || 0,
+                        dateTime[1] || 0,
+                        dateTime[2] || 0,
+                        dateTime[3] || 0,
+                        dateTime[4] || 0,
                         position
                     );
                 });
@@ -32,7 +33,6 @@ const QualificationTable = ({ quiz }) => {
             })
             .catch(error => {
                 console.error("Error getting quiz qualifications:", error);
-                throw error; // Re-lanzar el error para que se maneje en el useEffect.
             });
     }
 

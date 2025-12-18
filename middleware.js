@@ -1,25 +1,42 @@
 import { NextResponse } from 'next/server';
 
 export function middleware(request) {
-    // Get the JWT token from the request headers or cookies
-    const token = request.cookies.get("jwt") ? request.cookies.get("jwt").value : undefined;
+    // Get the JWT token from cookies
+    const token = request.cookies.get("jwt")?.value;
 
-    const unprotectedRoutes = ['/login', '/singin'];
-    const protectedRoutes = ['/home', '/quiz'];
+    const unprotectedRoutes = ['/login', '/signin', '/'];
+    const protectedRoutes = ['/home', '/quiz', '/quizcreation', '/user', '/passwordUpdate'];
     const pathToCheck = request.nextUrl.pathname;
 
     const isPathProtected = protectedRoutes.some(route => pathToCheck.startsWith(route));
-    const isPathUnprotected = unprotectedRoutes.some(route => pathToCheck.startsWith(route));
+    const isPathUnprotected = unprotectedRoutes.some(route => pathToCheck === route || (route !== '/' && pathToCheck.startsWith(route)));
 
-    if (isPathProtected) {
-        if (!token) {
-            // If no token is found, redirect to the login page
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
-    } else if (isPathUnprotected && token) {
-        // If a token is found and the route is unprotected, redirect to the home page
-        return NextResponse.redirect(new URL('/home', request.url));
+    // Si la ruta está protegida y no hay token, redirigir a login
+    if (isPathProtected && !token) {
+        const loginUrl = new URL('/login', request.url);
+        return NextResponse.redirect(loginUrl);
     }
-    // For routes that don't require authentication, no action is taken
-    return null;
+    
+    // Si hay token y está en una ruta de login/signin, redirigir a home
+    if (isPathUnprotected && token && (pathToCheck === '/login' || pathToCheck === '/signin' || pathToCheck === '/')) {
+        const homeUrl = new URL('/home', request.url);
+        return NextResponse.redirect(homeUrl);
+    }
+
+    // Continuar con la request
+    return NextResponse.next();
+}
+
+// Configurar en qué rutas se ejecuta el middleware
+export const config = {
+    matcher: [
+        '/home/:path*',
+        '/quiz/:path*',
+        '/quizcreation/:path*',
+        '/user/:path*',
+        '/passwordUpdate/:path*',
+        '/login',
+        '/signin',
+        '/'
+    ]
 }

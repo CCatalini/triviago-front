@@ -41,14 +41,9 @@
 
 .componentBox {
     background-color: white;
-    border: 1px;
-    /*borderColor: #667085;*/
-    /*color: #FFFFFF;*/
-    /*width: 769px;*/
     margin: 0 auto;
-    top: 446px;
-    left: 336px;
     min-height: 44px;
+    padding-bottom: 8px;
 }
 
 .userNameText{
@@ -169,23 +164,16 @@
 
 .line{
     height: 1px;
-    background: #667085;
-    display: flex;
-    flex-direction: inherit;
-    justify-content: inherit;
-    flex-shrink: 0;
-    padding: 0px 20px 0px 20px;
-    width: 730.051px;
+    background: #E0E0E0;
+    margin: 8px 0 0 0;
+    width: calc(100% - 40px);
     margin-left: 20px;
-    margin-right: 20px;
-    border-bottom: 1px solid #667085;
-    margin-top: 5px;
-
 }
 
 .commentBox{
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .responseCommentBox{
