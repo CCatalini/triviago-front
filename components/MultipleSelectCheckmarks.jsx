@@ -13,14 +13,13 @@ const MenuProps = {
     PaperProps: {
         style: {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
         },
     },
 };
 
 export default function MultipleSelectCheckmarks({ tag, options = [], values = [], onChange }) {
     return (
-        <FormControl sx={{ m: 1, width: 300 }}>
+        <FormControl sx={{ width: '100%' }} size="small">
             <InputLabel id="multiple-checkbox-label">{tag}</InputLabel>
             <Select
                 labelId="multiple-checkbox-label"
@@ -34,7 +33,7 @@ export default function MultipleSelectCheckmarks({ tag, options = [], values = [
             >
                 {options.map((option) => (
                     <MenuItem key={option} value={option}>
-                        <Checkbox checked={values.indexOf(option) > -1} />
+                        <Checkbox checked={values.indexOf(option) > -1} size="small" />
                         <ListItemText primary={option} />
                     </MenuItem>
                 ))}

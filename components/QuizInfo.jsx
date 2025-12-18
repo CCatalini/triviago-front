@@ -1,22 +1,38 @@
 "use client";
 import React, {useEffect, useState} from 'react';
-import {IconButton, Slide, Snackbar, Stack, Alert} from '@mui/material';
+import {IconButton, Slide, Snackbar, Stack, Alert, Tooltip, Box, Typography, Chip} from '@mui/material';
 import styles from '../styles/QuizInfo.module.css';
 import RatingSection from './RatingSection';
 import { Inter } from 'next/font/google';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import LockIcon from '@mui/icons-material/Lock';
 import {useRequestService} from "@/service/request.service";
+import Cookies from "js-cookie";
+import jwt from "jsonwebtoken";
 
 
 const inter = Inter({ subsets: ['latin'] });
 
-const QuizInfo = ({ id, title, labels, creationDate, description, rating, questions, author = "@example.com", saved, setSaved}) => {
+const QuizInfo = ({ id, title, labels, creationDate, description, rating, questions, author = "@example.com", saved, setSaved, invitationCode, isPrivate}) => {
 
     const service = useRequestService()
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("ERROR");
     const [comments, setComments] = useState([]);
+    const [copied, setCopied] = useState(false);
+    
+    // Obtener el ID del usuario actual
+    const token = Cookies.get('jwt');
+    const currentUserId = token ? jwt.decode(token)?.id : null;
+    const isAuthor = currentUserId && author?.id === currentUserId;
+    
+    const copyInvitationCode = () => {
+        navigator.clipboard.writeText(invitationCode);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
 
     useEffect(() => {
         service.fetchComments(id).then((commentsList) => {
@@ -73,6 +89,14 @@ const QuizInfo = ({ id, title, labels, creationDate, description, rating, questi
                             <div className={styles.header}>
                                 <div className={styles.title}>
                                     {title}
+                                    {isPrivate && (
+                                        <Chip 
+                                            icon={<LockIcon style={{fontSize: '14px'}}/>} 
+                                            label="Privado" 
+                                            size="small" 
+                                            style={{marginLeft: '10px', backgroundColor: '#FFE0B2', color: '#E65100'}}
+                                        />
+                                    )}
                                 </div>
                                 <div className={styles.date}>
                                     <IconButton onClick={()=> handleSaveQuiz(id)}>
@@ -80,6 +104,33 @@ const QuizInfo = ({ id, title, labels, creationDate, description, rating, questi
                                     </IconButton>
                                 </div>
                             </div>
+                            {/* Mostrar código de invitación solo al autor si el quiz es privado */}
+                            {isPrivate && isAuthor && invitationCode && (
+                                <Box sx={{
+                                    backgroundColor: '#E3F2FD',
+                                    borderRadius: '8px',
+                                    padding: '12px 16px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    marginTop: '8px',
+                                    border: '1px solid #90CAF9'
+                                }}>
+                                    <Box>
+                                        <Typography variant="caption" sx={{color: '#1565C0', fontWeight: 'bold'}}>
+                                            Código de invitación:
+                                        </Typography>
+                                        <Typography variant="h6" sx={{color: '#0D47A1', fontFamily: 'monospace', letterSpacing: '3px'}}>
+                                            {invitationCode}
+                                        </Typography>
+                                    </Box>
+                                    <Tooltip title={copied ? "¡Copiado!" : "Copiar código"}>
+                                        <IconButton onClick={copyInvitationCode} sx={{color: '#1565C0'}}>
+                                            <ContentCopyIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+                            )}
                             {labels && (<div className={styles.tags}>
                                 {labels?.join(', ')}
                             </div>)}

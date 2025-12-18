@@ -6,10 +6,7 @@ import ResponsiveAppBar from "@/components/ResponsiveAppBar";
 import styles from '../../../../styles/QuizComents.module.css';
 import {useParams, useRouter} from 'next/navigation';
 import {useRequestService} from "@/service/request.service";
-import {Button, CircularProgress, Slide, Snackbar, Alert} from "@mui/material";
-import jwt from "jsonwebtoken";
-import Cookies from "js-cookie";
-import Typography from "@mui/material/Typography";
+import {CircularProgress, Slide, Snackbar, Alert} from "@mui/material";
 
 
 const ResultPage = () => {
@@ -72,40 +69,24 @@ const ResultPage = () => {
         </>
     );
 
-    const userId = jwt.decode(Cookies.get('jwt')).id;
-    if (quiz.private && !quiz.authorizedUserIds.includes(userId)) {
-        return <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+    // Si el quiz se cargó correctamente, el usuario tiene acceso
+    // (ya sea porque es público, es el autor, o usó el código de invitación)
+    return (
+        <div>
             <ResponsiveAppBar/>
-            <Typography style={{margin: '32px 0'}}>
-                Este quiz es privado, debes acceder utilizando su código de invitación.
-            </Typography>
-            <Button
-                variant={"contained"}
-                style={{ backgroundColor: '#00CC66'}}
-                onClick={() => router.push("/home")}
-            >
-                Ir a Home
-            </Button>
-        </div>
-    } else {
-        return (
-            <div>
-                <ResponsiveAppBar/>
-                <br></br>
-                <div className={styles.componentBox}>
-                    <QuizInfo {...quiz} saved={saved} setSaved={setSaved}/>
-                </div>
-                <br></br>
-                <QuizComents quiz={quiz}/>
-                <Snackbar open={open} autoHideDuration={5000} onClose={handleClose} TransitionComponent={Slide}
-                          anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-                    <Alert onClose={handleClose} severity="error">
-                        {message}
-                    </Alert>
-                </Snackbar>
-
+            <br></br>
+            <div className={styles.componentBox}>
+                <QuizInfo {...quiz} saved={saved} setSaved={setSaved}/>
             </div>
-        );
-    }
+            <br></br>
+            <QuizComents quiz={quiz}/>
+            <Snackbar open={open} autoHideDuration={5000} onClose={handleClose} TransitionComponent={Slide}
+                      anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+                <Alert onClose={handleClose} severity="error">
+                    {message}
+                </Alert>
+            </Snackbar>
+        </div>
+    );
 };
 export default ResultPage;

@@ -167,7 +167,7 @@ const QuizFilter = ({setFilteredQuizzes, setFetchingQuizzes}) => {
             <p className={styles.quizFilterTitle}>Título</p>
             <Form.Control id={"titleFilter"} type="search" className={styles.quizFilterSearchInput} onChange={handleTitleChange}/>
             <p className={styles.quizFilterTitle}>Etiquetas</p>
-            <div>
+            <div className={styles.selectContainer}>
                 <MultipleSelectCheckmarks
                     tag={"Etiquetas"}
                     options={labels?.map(label => label.value)}

@@ -1,79 +1,92 @@
 .quizFilterContainer {
-    width: 250px;
-    height: 600px;
+    width: 280px;
     flex-shrink: 0;
-    background: #FFF;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    padding: 1px 16px 15px 15px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8faf9 100%);
+    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
+    padding: 20px;
     box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid #e8ebe9;
 }
 
 .quizFilterTitle {
-    font-family: Inter,sans-serif;
-    color: #000;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+    font-family: Inter, sans-serif;
+    color: #1a1a1a;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     display: flex;
-    margin-bottom: 5px;
-    margin-top: 20px;
+    margin-bottom: 8px;
+    margin-top: 16px;
+}
+
+.quizFilterTitle:first-of-type {
+    margin-top: 0;
 }
 
 .quizFilterSearchInput {
-    width: 219px;
-    height: 55px;
-    flex-shrink: 0;
-    border-radius: 8px;
-    border: 1px solid #D0D5DD;
-    background: #FFF;
-    text-indent: 18px;
-}
-
-
-.quizFilterDoubleInputFst {
-    width: 90px;
+    width: 100%;
     height: 44px;
     flex-shrink: 0;
     border-radius: 8px;
-    border: 1px solid #D0D5DD;
-    background: #FFF;
-    color: #667085;
-    font-family: Inter,sans-serif;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    padding-left: 4px;
+    border: 1px solid #d0d5dd;
+    background: #fff;
+    padding: 0 14px;
+    font-size: 14px;
+    font-family: Inter, sans-serif;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
+.quizFilterSearchInput:focus {
+    outline: none;
+    border-color: #00cc66;
+    box-shadow: 0 0 0 3px rgba(0, 204, 102, 0.15);
+}
+
+.selectContainer {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.quizFilterDoubleInputFst,
 .quizFilterDoubleInputSnd {
-    width: 90px;
-    height: 44px;
+    width: 100px;
+    height: 40px;
     flex-shrink: 0;
     border-radius: 8px;
-    border: 1px solid #D0D5DD;
-    background: #FFF;
-    color: #667085;
-    font-family: Inter,sans-serif;
-    font-size: 16px;
-    font-style: normal;
+    border: 1px solid #d0d5dd;
+    background: #fff;
+    color: #374151;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
     font-weight: 400;
-    line-height: normal;
-    padding-left: 4px;
+    padding: 0 12px;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.quizFilterDoubleInputFst:focus,
+.quizFilterDoubleInputSnd:focus {
+    outline: none;
+    border-color: #00cc66;
+    box-shadow: 0 0 0 3px rgba(0, 204, 102, 0.15);
+}
+
+.quizFilterDoubleInputFst::placeholder,
+.quizFilterDoubleInputSnd::placeholder {
+    color: #9ca3af;
 }
 
 .quizFilterInputPlaceholder {
     color: #667085;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
     display: flex;
-    justify-content: left;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    gap: 8px;
 }
 
 .quizFilterSearchButton {
@@ -82,24 +95,31 @@
     cursor: pointer;
 }
 
-.line{
-    width: 12px;
-    height: 1px;
-    background: #667085;
-    margin-left: 10px;
-    margin-right: 10px;
+.line {
+    width: 16px;
+    height: 2px;
+    background: #d0d5dd;
+    border-radius: 1px;
+    flex-shrink: 0;
 }
 
 .seguidores {
-    font-family: Inter,sans-serif;
-    color: #000;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
+    font-family: Inter, sans-serif;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    margin-left: -5px;
+    margin: 16px 0;
+    padding: 8px 0;
+    border-top: 1px solid #e8ebe9;
+    border-bottom: 1px solid #e8ebe9;
 }
+
+.seguidores p {
+    margin: 0;
+}
+
 .checkboxButton {
     display: flex;
     align-items: center;
@@ -107,53 +127,57 @@
     border: none;
     cursor: pointer;
     padding: 0;
-    /*margin-right: 10px;*/
 }
 
 .buttonContainer {
-    color: #FFF;
-    text-align: center;
-    font-family: Inter,sans-serif;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e8ebe9;
 }
 
 .searchButton {
-    width: 89px;
-    height: 32px;
-    flex-shrink: 0;
+    flex: 1;
+    height: 40px;
     border-radius: 8px;
-    background: #0C6;
+    background: linear-gradient(135deg, #00cc66 0%, #00b359 100%);
     border: none;
-    color: #FFF;
-    text-align: center;
-    font-family: Inter,sans-serif;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+    color: #fff;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 204, 102, 0.2);
+}
 
+.searchButton:hover {
+    background: linear-gradient(135deg, #00b359 0%, #009a4d 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 204, 102, 0.3);
+}
+
+.searchButton:active {
+    transform: translateY(0);
 }
 
 .clearButton {
-    width: 90px;
-    height: 32px;
-    flex-shrink: 0;
+    flex: 1;
+    height: 40px;
     border-radius: 8px;
-    border: none;
-    color: #000;
-    background: #FFF;
-    text-align: center;
-    font-family: Inter,sans-serif;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+    border: 1px solid #d0d5dd;
+    color: #374151;
+    background: #fff;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clearButton:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
 }
