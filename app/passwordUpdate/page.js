@@ -1,10 +1,9 @@
 "use client";
 
 import React, {useState} from 'react';
-import {Box, Button, Container, Slide, Snackbar, TextField, Typography} from '@mui/material';
+import {Box, Button, Container, Slide, Snackbar, TextField, Typography, Alert} from '@mui/material';
 import {useRouter} from "next/navigation";
 import {useRequestService} from "@/service/request.service";
-import {Alert} from "@mui/lab";
 
 const PasswordUpdateScreen = () => {
     const service = useRequestService()

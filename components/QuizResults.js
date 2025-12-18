@@ -5,8 +5,7 @@ import Rater from "react-rater";
 import 'react-rater/lib/react-rater.css'
 import {useRequestService} from "@/service/request.service";
 import React, {useState} from "react";
-import {Button, Snackbar} from "@mui/material";
-import {Alert} from "@mui/lab";
+import {Button, Snackbar, Alert} from "@mui/material";
 import {useRouter} from "next/navigation";
 
 const QuizResults = ({quizId, quizTitle="Asd", quizQuestionNumber = 10, correctAnswers = 8}) => {

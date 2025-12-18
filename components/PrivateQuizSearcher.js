@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import {Card, IconButton, InputAdornment, Slide, Snackbar, TextField} from "@mui/material";
+import {Card, IconButton, InputAdornment, Slide, Snackbar, TextField, Alert} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {useRequestService} from "@/service/request.service";
 import {useRouter} from "next/navigation";
-import {Alert} from "@mui/lab";
 
 const PrivateQuizSearcher = () => {
     const service = useRequestService()

@@ -5,8 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import MultipleSelectCheckmarks from "@/components/MultipleSelectCheckmarks";
 import Checkbox from '@mui/material/Checkbox';
-import {Slide, Snackbar} from "@mui/material";
-import {Alert} from "@mui/lab";
+import {Slide, Snackbar, Alert} from "@mui/material";
 import {useRequestService} from "@/service/request.service"
 
 const QuizFilter = ({setFilteredQuizzes, setFetchingQuizzes}) => {

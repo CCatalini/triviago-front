@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {IconButton, Slide, Snackbar, Stack} from '@mui/material';
+import {IconButton, Slide, Snackbar, Stack, Alert} from '@mui/material';
 import styles from '../styles/QuizPreview.module.css';
 import RatingSection from './RatingSection';
 import {Inter} from 'next/font/google';
@@ -7,7 +7,6 @@ import {useRouter} from "next/navigation";
 import {useRequestService} from "@/service/request.service";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import {Alert} from "@mui/lab";
 import DeleteQuizModal from "@/components/DeleteQuizModal";
 import Tooltip from "@mui/material/Tooltip";
 import TurnedInIcon from "@mui/icons-material/TurnedIn";

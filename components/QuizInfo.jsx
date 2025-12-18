@@ -1,13 +1,12 @@
 "use client";
 import React, {useEffect, useState} from 'react';
-import {IconButton, Slide, Snackbar, Stack} from '@mui/material';
+import {IconButton, Slide, Snackbar, Stack, Alert} from '@mui/material';
 import styles from '../styles/QuizInfo.module.css';
 import RatingSection from './RatingSection';
 import { Inter } from 'next/font/google';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import {useRequestService} from "@/service/request.service";
-import {Alert} from "@mui/lab";
 
 
 const inter = Inter({ subsets: ['latin'] });

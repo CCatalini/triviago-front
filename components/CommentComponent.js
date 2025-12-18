@@ -1,6 +1,6 @@
 "use client";
 import React, {useState} from 'react';
-import {Box, Button, Card, CardContent, IconButton, Slide, Snackbar, Typography} from '@mui/material';
+import {Box, Button, Card, CardContent, IconButton, Slide, Snackbar, Typography, Alert} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -9,7 +9,6 @@ import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import {useRequestService} from "@/service/request.service";
 import styles from '../styles/CommentComponent.module.css';
-import {Alert} from "@mui/lab";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import AddCircleIcon from "@mui/icons-material/AddCircle";

@@ -1,8 +1,7 @@
 'use client'
 import React, {useState} from 'react';
 import styles from '../styles/SigninForm.module.css';
-import {Slide, Snackbar} from "@mui/material";
-import {Alert} from "@mui/lab";
+import {Slide, Snackbar, Alert} from "@mui/material";
 import {useRequestService} from "@/service/request.service";
 import {useRouter} from "next/navigation";
 
