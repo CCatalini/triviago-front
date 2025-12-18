@@ -1,83 +1,81 @@
 .box{
-    width: 621px;
-    height: 190px;
-    flex-shrink: 0;
+    width: 420px;
     background: #FFF;
-    box-shadow: 0px 3.87229px 3.87229px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
-    margin-left: 22px;
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .componentBox{
-    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    margin-left: 22px;
-    gap: 14px;
-    margin-top: 17px;
-    margin-right: 22px;
+    padding: 28px 32px;
+    gap: 16px;
 }
 
 .buttonBox{
     display: flex;
     flex-direction: row;
-    justify-content: end;
-    gap: 9px;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 8px;
 }
 
-
 .titleText{
-    width: 244px;
-    height: 46px;
-    flex-shrink: 0;
-    color: #000;
+    color: #1a1a1a;
     font-family: Inter, sans-serif;
-    font-size: 36px;
-    font-style: normal;
+    font-size: 24px;
     font-weight: 700;
-    line-height: normal;
+    line-height: 1.2;
+    margin: 0;
 }
 
 .text{
-    color: #000;
+    color: #4a4a4a;
     font-family: Inter, sans-serif;
-    font-size: 18px;
-    font-style: normal;
+    font-size: 15px;
     font-weight: 400;
-    line-height: normal;
+    line-height: 1.5;
+    margin: 0;
 }
 
-
 .confirmButton{
-    width: 100px;
-    height: 32px;
-    flex-shrink: 0;
+    padding: 10px 24px;
     border-radius: 8px;
-    background: #0C6;
+    background: linear-gradient(135deg, #00cc66 0%, #00b359 100%);
     cursor: pointer;
     color: #FFF;
     text-align: center;
     font-family: Inter, sans-serif;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+    font-size: 14px;
+    font-weight: 600;
     border: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 204, 102, 0.3);
+}
+
+.confirmButton:hover{
+    background: linear-gradient(135deg, #00b359 0%, #009a4d 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 204, 102, 0.4);
 }
 
 .cancelButton{
-    width: 96px;
-    height: 32px;
-    flex-shrink: 0;
-    color: #000;
+    padding: 10px 24px;
+    border-radius: 8px;
+    color: #4a4a4a;
     text-align: center;
     font-family: Inter, sans-serif;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    background: white;
+    background: #f5f5f5;
     border: none;
+    transition: all 0.2s ease;
+}
+
+.cancelButton:hover{
+    background: #e8e8e8;
 }
