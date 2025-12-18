@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {CircularProgress, Pagination} from '@mui/material';
 import QuizPreview from '@/components/QuizPreview';
 import styles from '@/styles/HomeScreen.module.css';
@@ -14,7 +14,24 @@ const HomeScreen = () => {
     const [fetchingQuizzes, setFetchingQuizzes] = useState(true);
     const [currentPage, setCurrentPage] = useState({ content: [], totalPages: 0, pageable: { pageNumber: 0 } });
     const [comments, setComments] = useState([]);
+    const [sortOrder, setSortOrder] = useState(null);
     const router = useRouter();
+    
+    // Sorter ORDEN ALFABETICO
+    const sortedQuizzes = useMemo(() => {
+        if (!currentPage.content || sortOrder === null) return currentPage.content;
+        
+        return [...currentPage.content].sort((a, b) => {
+            const comparison = a.title.localeCompare(b.title, 'es', { sensitivity: 'base' });
+            return sortOrder === 'asc' ? comparison : -comparison;
+        });
+    }, [currentPage.content, sortOrder]);
+    
+    const handleSortClick = () => {
+        if (sortOrder === null) setSortOrder('asc');
+        else if (sortOrder === 'asc') setSortOrder('desc');
+        else setSortOrder(null);
+    };
 
     const fetchQuizzes = (pageNumber) => {
         setFetchingQuizzes(true);
@@ -63,13 +80,22 @@ const HomeScreen = () => {
                         <QuizFilter setFilteredQuizzes={setCurrentPage} setFetchingQuizzes={setFetchingQuizzes} />
                     </div>
                     <div className={styles.center}>
+                        {/* Sorter */}
+                        <div className={styles.sorterContainer}>
+                            <button 
+                                className={`${styles.sorterButton} ${sortOrder !== null ? styles.sorterActive : ''}`}
+                                onClick={handleSortClick}
+                            >
+                                Alfabético {sortOrder === 'asc' ? '↑ A-Z' : sortOrder === 'desc' ? '↓ Z-A' : ''}
+                            </button>
+                        </div>
                         {
                             fetchingQuizzes
                                 ?
                                 <CircularProgress size="64px" style={{ color: '#00CC66' }} />
                                 : <>
                                     <div className={styles.quizzes}>
-                                        {currentPage.content.map((quiz, index) => (
+                                        {sortedQuizzes.map((quiz, index) => (
                                             <div key={`${index}-${quiz.title}`} className={styles.quizItem}>
                                                 <QuizPreview {...quiz} commentCount={comments.length} questionCount={quiz.questions?.length}/>
                                             </div>

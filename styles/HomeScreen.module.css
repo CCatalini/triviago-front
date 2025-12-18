@@ -121,3 +121,38 @@
  .pagination {
    margin-bottom: 40px;
  }
+
+.sorterContainer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 10px;
+}
+
+.sorterButton {
+  padding: 8px 16px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #fff;
+  color: #374151;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sorterButton:hover {
+  background: #f3f4f6;
+  border-color: #00CC66;
+}
+
+.sorterActive {
+  background: #00CC66;
+  color: #fff;
+  border-color: #00CC66;
+}
+
+.sorterActive:hover {
+  background: #00b359;
+}
