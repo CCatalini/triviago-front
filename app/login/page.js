@@ -6,20 +6,17 @@ import styles from '../../styles/LoginPage.module.css';
 import LoginHeader from '../../components/LoginHeader';
 import LoginTitle from "../../components/LoginTitle";
 import {Slide, Snackbar} from "@mui/material";
-import {Alert} from "@mui/lab";
+import Alert from "@mui/material/Alert";
 
 const LoginPage = () => {
-
     const [open, setOpen] = useState(false)
 
     const handleClose = () => {
-        //para esconder el popup
         setOpen(false)
     }
 
-    // es la funcion que se corre cuadno se renderiza el componente o cuando cambia el valor del arreglo de dependencia
     useEffect(() => {
-        if (localStorage.getItem('logout') ){
+        if (localStorage.getItem('logout')){
             setOpen(true)
             localStorage.removeItem('logout')
         }
@@ -36,10 +33,11 @@ const LoginPage = () => {
             </div>
             <Snackbar open={open} autoHideDuration={5000} onClose={handleClose} TransitionComponent={Slide} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert onClose={handleClose} severity='success'>
-                    {'Sesión cerrada exitosamente. '}
+                    Sesión cerrada exitosamente.
                 </Alert>
             </Snackbar>
         </div>
     );
 };
+
 export default LoginPage;

@@ -4,9 +4,9 @@ import { useRequestService } from "@/service/request.service";
 import CommentComponent from "@/components/CommentComponent";
 import Cookies from "js-cookie";
 import { Button, Slide, Snackbar } from "@mui/material";
-import { Alert } from "@mui/lab";
+import Alert from "@mui/material/Alert";
 import QualificationTable from "@/components/QualificationTable";
-import { jwtDecode } from "jwt-decode";
+import jwtDecode from "jwt-decode";
 
 const QuizComents = ({quiz}) => {
     const [comment, setComment] = useState("");
