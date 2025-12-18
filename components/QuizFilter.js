@@ -141,14 +141,14 @@ const QuizFilter = ({setFilteredQuizzes, setFetchingQuizzes}) => {
             }
         }
         const quizFilter = {
-            title: quizTitle,
-            labels: selectedTags.join(","),
+            title: quizTitle || null,
+            labels: selectedTags.length > 0 ? selectedTags.join(",") : null,
             dateFrom: startDate ? startDate.toISOString().split('T')[0] : null,
             dateTo: endDate ? endDate.toISOString().split('T')[0] : null,
-            minQuestion: minQuestions ? minQuestions : 0,
-            maxQuestion: maxQuestions ? maxQuestions : 10000,
-            minRating: minCalification ? minCalification : 0,
-            maxRating: maxCalification ? maxCalification : 5,
+            minQuestion: minQuestions ? parseInt(minQuestions) : null,
+            maxQuestion: maxQuestions ? parseInt(maxQuestions) : null,
+            minRating: minCalification ? parseFloat(minCalification) : null,
+            maxRating: maxCalification ? parseFloat(maxCalification) : null,
         }
 
         setFetchingQuizzes(true);
