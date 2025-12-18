@@ -2,10 +2,9 @@
 
 import styles from '../styles/QuizCreatorInfo.module.css';
 import React, {useEffect, useState} from "react";
-import Image from 'next/image';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import {OutlinedInput, Switch} from "@mui/material";
+import {Switch} from "@mui/material";
 import {useRequestService} from "@/service/request.service";
 
 const QuizCreatorInfo = ({ quizData, setQuizData, setMessage, setOpen }) => {

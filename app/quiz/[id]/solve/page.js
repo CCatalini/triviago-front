@@ -100,7 +100,6 @@ const quizSolve = () => {
             };
             const response = await axios.post(API_URL + "/quiz-resolution", jsonModel, config)
             if (response.status === 200) {
-                console.log(response.data)
                 setCorrectAnswersCount(response.data.correctAnswers);
                 setShowResults(true);
             }
@@ -117,29 +116,20 @@ const quizSolve = () => {
             <ResponsiveAppBar/>
             <br></br>
             <div className={styles.componentBox}>
-                {console.log(quizData)}
                 <QuizPreview {...quizData} />
-                <br></br>
                 {questionsWithIsAnswered?.map((question) => {
-                    return (
-                        <>
-                            <QuizQuestionAnswer question={question}/>
-                            <br/>
-                        </>
-                    )
+                    return <QuizQuestionAnswer question={question}/>
                 })}
             </div>
-            <br></br>
             <div style={{display: 'flex', justifyContent: 'center'}}>
                 <Button
                     variant="contained"
-                    style={{backgroundColor: '#00CC66'}}
+                    style={{backgroundColor: '#00CC66', marginTop: '24px'}}
                     onClick={handleSendResolution} // Call the function to display the modal
                 >
                     Enviar
                 </Button>
             </div>
-            <br></br>
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} TransitionComponent={Slide}
                       anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
                 <Alert onClose={handleClose} severity="error">

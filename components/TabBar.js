@@ -3,10 +3,7 @@ import React, {useState} from 'react';
 import Tab from "@/components/Tab";
 import style from '@/styles/TabBar.module.css';
 
-const TabBar = () => {
-
-    const [activeTab, setActiveTab] = useState(0);
-
+const TabBar = ({activeTab, setActiveTab}) => {
 
 
     return (

@@ -17,7 +17,6 @@ const QuizResults = ({quizId, quizTitle="Asd", quizQuestionNumber = 10, correctA
     const router = useRouter()
 
     function handleRate(event) {
-        console.log(quizId)
         const rating = event.rating;
         if (quizId !== '0') {
             service.rateQuiz(quizId, rating)
@@ -38,11 +37,11 @@ const QuizResults = ({quizId, quizTitle="Asd", quizQuestionNumber = 10, correctA
     };
 
     return (
-        <div className={styles.componentBox}>
+        <div className={styles.componentBox} style={{paddingBottom: '8px'}}>
             <p className={styles.quizTitle}>{quizTitle}</p>
-            <span className={styles.quizResultText}>Tu resultado fue
-                <span className={styles.quizResultTextBold}> {correctAnswers} de {quizQuestionNumber} respuestas correctas</span></span>
-            <div className={styles.rateBox}>
+            <p className={styles.quizResultText}>Tu resultado fue
+                <span className={styles.quizResultTextBold}> {correctAnswers} de {quizQuestionNumber} respuestas correctas</span></p>
+            <div className={styles.rateBox} style={{margin: 0}}>
                 <p className={styles.rateText}>¿Cómo calificarías este quiz?</p>
                 <div className={styles.starsBox}>
                     <Rater style={{fontSize: '35px'}} onRate={handleRate} disabled={ratingSubmitted}/></div>

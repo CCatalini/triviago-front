@@ -20,6 +20,7 @@ const CreationPage = () => {
 
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState('')
+    const [creatingQuiz, setCreatingQuiz] = useState(false)
 
     const [quizData, setQuizData] = useState({
         "title": "",
@@ -81,14 +82,20 @@ const CreationPage = () => {
     const service = useRequestService()
 
     const createQuiz = () => {
+        setCreatingQuiz(true);
         // Si no se puede validar el quiz (o sea el validateQuiz da false), retorna, ya que no debe mandar la query.
-        if (!validateQuiz(quizData)) {return}
+        if (!validateQuiz(quizData)) {
+            setCreatingQuiz(false);
+            return
+        }
         service.createQuiz(quizData)
             .then((response)=>{
+                setCreatingQuiz(false);
                 setId(response.id);
                 router.push(`/quiz/${response.id}/details`)
             })
             .catch((error)=>{
+                setCreatingQuiz(false);
                 setMessage('Hubo un error al crear el quiz');
                 setOpen(true);
                 console.log(error)
@@ -146,7 +153,13 @@ const CreationPage = () => {
                 <Button variant="outlined" startIcon={<AddCircleIcon/>} onClick={addQuestion} style={{color: '#00CC66', borderColor: '#00CC66'}}>
                     Agregar pregunta
                 </Button>
-                <Button variant="contained" startIcon={<AddCircleIcon/>} onClick={createQuiz} style={{backgroundColor: '#00CC66'}}>
+                <Button
+                    variant="contained"
+                    startIcon={<AddCircleIcon/>}
+                    onClick={createQuiz}
+                    style={{backgroundColor: creatingQuiz ? '#0000001E' : '#00CC66'}}
+                    disabled={creatingQuiz}
+                >
                     Crear quiz
                 </Button>
             </div>

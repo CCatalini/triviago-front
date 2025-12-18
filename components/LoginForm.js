@@ -2,10 +2,11 @@
 
 import React, {useState} from 'react';
 import styles from '../styles/LoginForm.module.css';
-import {Slide, Snackbar} from "@mui/material";
+import {Button, Slide, Snackbar} from "@mui/material";
 import {Alert} from "@mui/lab"
 import {useRequestService} from "@/service/request.service";
 import {useRouter} from "next/navigation";
+import ForgotPasswordModal from "@/components/ForgotPasswordModal";
 
 
 const LoginForm = () => {
@@ -14,6 +15,8 @@ const LoginForm = () => {
     const [email, setEmail] = useState("");
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState("ERROR");
+    const [severity, setSeverity] = React.useState("error");
+    const [isOpenForgotPasswordModal, setIsOpenForgotPasswordModal] = useState(false);
     const router = useRouter();
 
 
@@ -30,12 +33,14 @@ const LoginForm = () => {
         event.preventDefault()
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         if (!email.match(emailPattern)) {
+            setSeverity("error");
             setMessage("El email no es valido.")
             setOpen(true);
             return
         }
 
         if (password.length < 8) {
+            setSeverity("error");
             setMessage("La contraseña debe tener al menos 8 caracteres.")
             setOpen(true);
             return
@@ -45,6 +50,7 @@ const LoginForm = () => {
         service.login({username: email, password: password})
             .then(() => router.push("/home"))
             .catch((e) => {
+                setSeverity("error");
                 if (e.response.status === 401) {
                     setMessage("Las credenciales son incorrectas.")
                 } else {
@@ -78,10 +84,28 @@ const LoginForm = () => {
 
             <p className={styles.text}>¿No tienes una cuenta? <a href="/signin" className={styles.link}>Regístrate</a>
             </p>
-            <p className={styles.text}><a href="#" className={styles.link}>¿Olvidaste tu contraseña?</a></p>
+            <Button
+                variant="text"
+                onClick={() => setIsOpenForgotPasswordModal(true)}
+                style={{color: 'black', textTransform: 'none', backgroundColor: 'transparent'}}
+                disableRipple
+            >
+                ¿Olvidaste tu contraseña?
+            </Button>
+
+            <ForgotPasswordModal
+                isOpen={isOpenForgotPasswordModal}
+                onClose={() => setIsOpenForgotPasswordModal(false)}
+                showSnackbar={(message, severity) => {
+                    setSeverity(severity)
+                    setMessage(message);
+                    setOpen(true);
+                }}
+            />
+
             <Snackbar open={open} autoHideDuration={5000} onClose={handleClose} TransitionComponent={Slide}
                       anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
-                <Alert onClose={handleClose} severity="error">
+                <Alert onClose={handleClose} severity={severity}>
                     {message}
                 </Alert>
             </Snackbar>

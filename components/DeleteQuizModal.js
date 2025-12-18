@@ -1,26 +1,24 @@
 'use client';
-import {useRouter} from 'next/navigation';
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import {useRequestService} from "@/service/request.service";
-import Cookies from "js-cookie";
 
-const DeleteAccountModal = ({ isOpen, onClose, showSnackbar, userId }) => {
-    const router = useRouter();
+const DeleteQuizModal = ({ isOpen, onClose, showSnackbar, quizId, title}) => {
     const service = useRequestService();
 
     const handleDeleteClick = () => {
-        service.deleteUser(userId)
+        service.deleteQuiz(quizId)
             .then(r => {
                 if (r.status === 200) {
-                    localStorage.removeItem('token')
-                    Cookies.remove("jwt")
-                    router.push(`/signin`);
+                    showSnackbar('Se eliminó exitosamente el quiz.', 'success')
+                    window.location.reload()
+                } else {
+                    showSnackbar('Hubo un error al intentar eliminar el quiz.', 'error')
                 }
             })
             .catch(e => {
-                showSnackbar('Hubo un error al intentar eliminar tu cuenta.', 'error')
+                showSnackbar('Hubo un error al intentar eliminar el quiz.', 'error')
             });
     };
 
@@ -29,10 +27,10 @@ const DeleteAccountModal = ({ isOpen, onClose, showSnackbar, userId }) => {
             open={isOpen}
             onClose={onClose}
         >
-            <DialogTitle>Eliminar cuenta</DialogTitle>
+            <DialogTitle>Eliminar quiz</DialogTitle>
             <DialogContent>
                 <Typography>
-                    ¿Estás seguro que deseas eliminar tu cuenta?
+                    {`¿Estás seguro que deseas eliminar el quiz titulado ${title}?`}
                 </Typography>
             </DialogContent>
             <DialogActions style={{padding: '0px 20px 24px 24px'}}>
@@ -57,4 +55,4 @@ const DeleteAccountModal = ({ isOpen, onClose, showSnackbar, userId }) => {
     );
 };
 
-export default DeleteAccountModal;
+export default DeleteQuizModal;

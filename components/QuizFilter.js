@@ -4,7 +4,6 @@ import Form from 'react-bootstrap/Form';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import MultipleSelectCheckmarks from "@/components/MultipleSelectCheckmarks";
-import Image from "next/image";
 import Checkbox from '@mui/material/Checkbox';
 import {Slide, Snackbar} from "@mui/material";
 import {Alert} from "@mui/lab";
@@ -19,7 +18,7 @@ const QuizFilter = ({setFilteredQuizzes, setFetchingQuizzes}) => {
     const [maxQuestions, setMaxQuestions] = useState('');
     const [minCalification, setMinCalification] = useState("");
     const [maxCalification, setMaxCalification] = useState("");
-    const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+    const [onlyFollowing, setOnlyFollowing] = useState(false);
     const [message, setMessage] = useState("ERROR");
     const [open, setOpen] = useState(false);
     const service = useRequestService()
@@ -85,7 +84,7 @@ const QuizFilter = ({setFilteredQuizzes, setFetchingQuizzes}) => {
     };
 
     const handleCheckboxChange = (event) => {
-        setIsCheckboxChecked(event.target.checked);
+        setOnlyFollowing(event.target.checked);
     };
 
     const isCreationDateValid = (startDate && endDate) ? startDate <= endDate : true;
@@ -112,7 +111,7 @@ const QuizFilter = ({setFilteredQuizzes, setFetchingQuizzes}) => {
         setMaxQuestions('');
         setMinCalification('');
         setMaxCalification('');
-        setIsCheckboxChecked(false);
+        setOnlyFollowing(false);
         setSelectedTags([]);
         document.getElementById("titleFilter").value = ''
     };
@@ -147,16 +146,15 @@ const QuizFilter = ({setFilteredQuizzes, setFetchingQuizzes}) => {
             labels: selectedTags.join(","),
             dateFrom: startDate ? startDate.toISOString().split('T')[0] : null,
             dateTo: endDate ? endDate.toISOString().split('T')[0] : null,
-            minQuestions: minQuestions,
-            maxQuestions: maxQuestions,
-            minRating: minCalification,
-            maxRating: maxCalification,
+            minQuestion: minQuestions ? minQuestions : 0,
+            maxQuestion: maxQuestions ? maxQuestions : 10000,
+            minRating: minCalification ? minCalification : 0,
+            maxRating: maxCalification ? maxCalification : 5,
         }
 
         setFetchingQuizzes(true);
 
-        service.filterQuizzes(quizFilter).then((response) => {
-            console.log(response)
+        service.filterQuizzes(quizFilter, onlyFollowing).then((response) => {
             setFilteredQuizzes(response)
         }).catch((error) => {
             console.log(error);
@@ -249,7 +247,7 @@ const QuizFilter = ({setFilteredQuizzes, setFetchingQuizzes}) => {
             </div>
             <div className={styles.seguidores}>
                 <Checkbox
-                    checked={isCheckboxChecked}
+                    checked={onlyFollowing}
                     onChange={handleCheckboxChange}
                 />
                 <p>Seguidores</p>

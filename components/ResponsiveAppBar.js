@@ -124,37 +124,13 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-                <MenuItem>
-                    <Typography textAlign="center">
-                        <Button onClick = {handleProfileClick}
-                                style={{
-                                    color: 'black',
-                                    textDecoration: 'none',
-                                    padding :0,
-                                    textTransform:'none',
-                                    fontSize:'1rem'
-                                }}>
-                            Mi perfil
-                        </Button>
-                    </Typography>
+                <MenuItem onClick={handleProfileClick}>
+                    Mi perfil
                 </MenuItem>
 
-                <MenuItem>
-                <Typography textAlign="center">
-                  <Button onClick = {handleLogout}
-                          style={{
-                            color: 'black',
-                            textDecoration: 'none',
-                            padding :0,
-                            textTransform:'none',
-                            fontSize:'1rem'
-                          }}
-                  >
+                <MenuItem onClick={handleLogout}>
                     Cerrar Sesion
-                    </Button>
-                </Typography>
-              </MenuItem>
-            
+                </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

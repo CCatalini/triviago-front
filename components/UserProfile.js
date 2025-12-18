@@ -1,7 +1,6 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from '../styles/UserProfile.module.css';
-import Image from 'next/image';
 import DeleteAccountModal from './DeleteAccountModal';
 import {useRequestService} from "@/service/request.service";
 import EditIcon from "@mui/icons-material/Edit";
@@ -10,6 +9,7 @@ import {Alert} from "@mui/lab";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import 'dayjs/locale/en-gb';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const UserProfile = ({
                          firstName,
@@ -23,27 +23,55 @@ const UserProfile = ({
 
     const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
     const service = useRequestService();
+    const [isFollowing, setIsFollowing] = useState(false);
+    const id = window.location.pathname.split('/').slice(-2, -1)[0];
+
+
+    useEffect(() => {
+        service.isFollowing(id)
+            .then(user => {
+                setIsFollowing(user.isFollowing);
+            })
+            .catch(error => {
+                console.error("Error al verificar si el usuario sigue a otro usuario:", error);
+            });
+    }, [userId, id]);
+
 
     const onDeleteClick = () => {
         setShowDeleteAccountModal(true);
     };
 
-    const handleDeleteAccount = async () => {
-        try {
-            await service.deleteUser(userId);
-        } catch (error) {
-            console.error('Error al eliminar el usuario:', error);
-        }
-    };
-
     const onFollowClick = () => {
-        // Implementar
+        service.followUser(id)
+            .then(response => {
+                setMessage("Se siguió al usuario correctamente");
+                setSeverity("success");
+                setOpen(true)
+                setIsFollowing(true);
+            })
+            .catch(error => {
+                console.error(`Error al seguir al usuario con ID ${id}: ${error.message}`);
+            });
     };
 
     const [isEditingName, setIsEditingName] = useState(false);
     const [updatedInfo, setUpdatedInfo] = useState({firstName: "", lastName: "", birthDate: ""});
     const [info, setInfo] = useState({firstName: firstName, lastName: lastName, birthDate: birthDate.join('-')});
 
+    const onUnfollowClick = () => {
+        service.unFollowUser(id)
+            .then(response => {
+                setMessage("Se dejo de seguir al usuario correctamente");
+                setSeverity("success");
+                setOpen(true);
+                setIsFollowing(false);
+
+            })
+            .catch(error => {
+                console.error(`Error al dejar de seguir al usuario con ID ${id}: ${error.message}`);
+            });
+    }
     const [isEditingBirthDate, setIsEditingBirthDate] = useState(false);
 
     // Snackbar related variables
@@ -104,131 +132,139 @@ const UserProfile = ({
 
     return (
         <Card className={styles.userInfoContainer}>
-            <div  >
-                <Image
-                    src="/assets/images/UserIconGray.png"
-                    alt="usericon"
-                    width={128}
-                    height={128}
-                />
-
-            </div>
-            <div  >
+            <AccountCircleIcon style={{ fontSize: 156, color: '#667085' }}/>
+            <div>
                 <Typography
-                    className={styles.userInfoTitle}
+                    className={styles.userText}
                     sx={{
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         display: "-webkit-box",
                         WebkitLineClamp: "2",
                         WebkitBoxOrient: "vertical",
+                        color: "#000",
+                        fontFamily: "sans-serif",
+                        fontSize: "24px",
+                        fontStyle: "normal",
+                        fontWeight: 400,
+                        lineHeight: "normal",
                     }}
                 >
                     {email}
                 </Typography>
-                {   isEditingName
-                    ?   <div>
-                            <div style={{display: 'flex'}}>
-                                <input
-                                    type="text"
-                                    value={updatedInfo.firstName}
-                                    onChange={(e) => setUpdatedInfo({...updatedInfo, firstName: e.target.value})}
-                                    className={styles.editInput}
-                                    style={{ maxWidth: "200px", width: "100%" }}
-                                    placeholder="Introducir nombre:"
-                                />
-                                <Box width={8}/>
-                                <input
-                                    type="text"
-                                    value={updatedInfo.lastName}
-                                    onChange={(e) => setUpdatedInfo({...updatedInfo, lastName: e.target.value})}
-                                    className={styles.editInput}
-                                    style={{ maxWidth: "200px", width: "100%" }}
-                                    placeholder="Introducir apellido:"
-                                />
-                            </div>
-                            <div style={{height: '32px', display: 'flex', flexDirection: 'row', marginTop: '8px'}}>
-                                <Button
-                                    variant="outlined"
-                                    onClick={() => setIsEditingName(false)}
-                                    className={styles.cancelButton}
-                                    style={{color: '#000', borderColor: '#000'}}
-                                >
-                                    Cancelar
-                                </Button>
-                                <Box width={8}/>
-                                <Button
-                                    variant="contained"
-                                    className={styles.saveButton}
-                                    // disabled={updatedInfo.firstName.trim() === '' || updatedInfo.lastName.trim() === '' }
-                                    onClick={() => {
-                                        if (updatedInfo.firstName.trim() === '') {
-                                            setMessage("No se puede dejar el nombre vacío");
-                                            setSeverity("error");
-                                            setOpen(true);
-                                            return;
-                                        }
-                                        if (updatedInfo.lastName.trim() === '') {
-                                            setMessage("No se puede dejar el apellido vacío");
-                                            setSeverity("error");
-                                            setOpen(true);
-                                            return;
-                                        }
-                                        if (updatedInfo.firstName.length >= 255) {
-                                            setMessage("No se puede agregar un nombre con más de 255 caracteres");
-                                            setSeverity("error");
-                                            setOpen(true);
-                                            return;
-                                        }
-                                        if (updatedInfo.lastName.length >= 255) {
-                                            setMessage("No se puede agregar un apellido con más de 255 caracteres");
-                                            setSeverity("error");
-                                            setOpen(true);
-                                            return;
-                                        }
-
-                                        const userId = window.location.pathname.split('/')[2]
-                                        service.editUserInformation(userId, updatedInfo).then(() => {
-                                            setInfo(updatedInfo)
-                                            setIsEditingName(false)
-                                            setMessage("Se modifico el nombre correctamente");
-                                            setSeverity("success");
-                                            setOpen(true);
-                                        }).catch(error => {
-                                            setIsEditingName(false)
-                                            setMessage("Error modificando el nombre");
-                                            setSeverity("error");
-                                            setOpen(true);
-                                            console.error("Error editing info:", error);
-                                        });
-                                    }}
-                                    style={{color: '#FFF', backgroundColor: '#00CC66'}}
-                                >
-                                    Guardar
-                                </Button>
-                            </div>
+                {isEditingName
+                    ? <div>
+                        <div style={{display: 'flex'}}>
+                            <input
+                                type="text"
+                                value={updatedInfo.firstName}
+                                onChange={(e) => setUpdatedInfo({...updatedInfo, firstName: e.target.value})}
+                                className={styles.editInput}
+                                style={{maxWidth: "200px", width: "100%"}}
+                                placeholder="Introducir nombre:"
+                            />
+                            <Box width={8}/>
+                            <input
+                                type="text"
+                                value={updatedInfo.lastName}
+                                onChange={(e) => setUpdatedInfo({...updatedInfo, lastName: e.target.value})}
+                                className={styles.editInput}
+                                style={{maxWidth: "200px", width: "100%"}}
+                                placeholder="Introducir apellido:"
+                            />
                         </div>
-                    :   <div className={styles.userInfoEditableContainer} style={{maxWidth: '400px'}}>
+                        <div style={{height: '32px', display: 'flex', flexDirection: 'row', marginTop: '8px'}}>
+                            <Button
+                                variant="outlined"
+                                onClick={() => setIsEditingName(false)}
+                                className={styles.cancelButton}
+                                style={{color: '#000', borderColor: '#000'}}
+                            >
+                                Cancelar
+                            </Button>
+                            <Box width={8}/>
+                            <Button
+                                variant="contained"
+                                className={styles.saveButton}
+                                // disabled={updatedInfo.firstName.trim() === '' || updatedInfo.lastName.trim() === '' }
+                                onClick={() => {
+                                    if (updatedInfo.firstName.trim() === '') {
+                                        setMessage("No se puede dejar el nombre vacío");
+                                        setSeverity("error");
+                                        setOpen(true);
+                                        return;
+                                    }
+                                    if (updatedInfo.lastName.trim() === '') {
+                                        setMessage("No se puede dejar el apellido vacío");
+                                        setSeverity("error");
+                                        setOpen(true);
+                                        return;
+                                    }
+                                    if (updatedInfo.firstName.length >= 255) {
+                                        setMessage("No se puede agregar un nombre con más de 255 caracteres");
+                                        setSeverity("error");
+                                        setOpen(true);
+                                        return;
+                                    }
+                                    if (updatedInfo.lastName.length >= 255) {
+                                        setMessage("No se puede agregar un apellido con más de 255 caracteres");
+                                        setSeverity("error");
+                                        setOpen(true);
+                                        return;
+                                    }
+
+                                    const userId = window.location.pathname.split('/')[2]
+                                    service.editUserInformation(userId, updatedInfo).then(() => {
+                                        setInfo(updatedInfo)
+                                        setIsEditingName(false)
+                                        setMessage("Se modifico el nombre correctamente");
+                                        setSeverity("success");
+                                        setOpen(true);
+                                    }).catch(error => {
+                                        setIsEditingName(false)
+                                        setMessage("Error modificando el nombre");
+                                        setSeverity("error");
+                                        setOpen(true);
+                                        console.error("Error editing info:", error);
+                                    });
+                                }}
+                                style={{color: '#FFF', backgroundColor: '#00CC66'}}
+                            >
+                                Guardar
+                            </Button>
+                        </div>
+                    </div>
+                    : <div className={styles.userInfoEditableContainer} style={{maxWidth: '400px'}}>
                         <Typography
-                            className={styles.userInfoSubtitle}
+                            className={styles.userText}
                             sx={{
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
                                 display: "-webkit-box",
                                 WebkitLineClamp: "2",
                                 WebkitBoxOrient: "vertical",
+                                color: "#000",
+                                fontFamily: "sans-serif",
+                                fontSize: "18px",
+                                fontStyle: "normal",
+                                fontWeight: 400,
+                                lineHeight: "normal",
                             }}
                         >
                             {info.firstName + ' ' + info.lastName}
                         </Typography>
-                        {   isCurrentUser &&
+                        {isCurrentUser &&
                             <IconButton
                                 aria-label="Editar nombre"
                                 color="#667085;"
                                 // sx={{position: 'relative', zIndex: 0}}
                                 onClick={() => {
                                     setIsEditingName(true)
-                                    setUpdatedInfo({firstName: info.firstName, lastName: info.lastName, birthDate: info.birthDate})
+                                    setUpdatedInfo({
+                                        firstName: info.firstName,
+                                        lastName: info.lastName,
+                                        birthDate: info.birthDate
+                                    })
                                 }}
                             >
                                 <EditIcon/>
@@ -248,19 +284,6 @@ const UserProfile = ({
                             onChange={(e) => setUpdatedInfo({...updatedInfo, birthDate: e.target.value})}
                             onKeyDown={(e) => e.preventDefault()}
                         />
-                        {/*    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='en-gb'>*/}
-                        {/*        <DemoContainer components={['DatePicker']}>*/}
-                        {/*            <div style={{height: '56px'}}>*/}
-                        {/*            <DatePicker*/}
-                        {/*                label="Fecha de nacimiento"*/}
-                        {/*                value={updatedInfo.birthDate ? dayjs(updatedInfo.birthDate) : null}*/}
-                        {/*                className={styles.inputCalendar}*/}
-                        {/*                max={dayjs().format()} // Make sure to use Dayjs for max as well*/}
-                        {/*                onChange={(date) => setUpdatedInfo({ ...updatedInfo, birthDate: date })}*/}
-                        {/*            />*/}
-                        {/*            </div>*/}
-                        {/*        </DemoContainer>*/}
-                        {/*    </LocalizationProvider>*/}
                         <div style={{height: '32px', display: 'flex', flexDirection: 'row', marginTop: '8px'}}>
                             <Button
                                 variant="outlined"
@@ -316,15 +339,26 @@ const UserProfile = ({
                 ) : (
                     <div className={styles.userInfoEditableContainer}>
                         {/*<Typography className={styles.userInfoSubtitle}>{info.birthDate.split('-').reverse().join('/')}</Typography>*/}
-                        <Typography className={styles.userInfoSubtitle}>{showDate(info.birthDate)}</Typography>
-                        {   isCurrentUser &&
+                        <Typography className={styles.userInfoSubtitle} style={{
+                            color: "#000",
+                            fontFamily: "sans-serif",
+                            fontSize: "18px",
+                            fontStyle: "normal",
+                            fontWeight: 400,
+                            lineHeight: "normal"
+                        }}> {showDate(info.birthDate)}</Typography>
+                        {isCurrentUser &&
                             <IconButton
                                 aria-label="Editar fecha de nacimiento"
                                 color="#667085;"
                                 // sx={{position: 'relative', zIndEex: 0}}
                                 onClick={() => {
                                     setIsEditingBirthDate(true);
-                                    setUpdatedInfo({firstName: info.firstName, lastName: info.lastName, birthDate: info.birthDate});
+                                    setUpdatedInfo({
+                                        firstName: info.firstName,
+                                        lastName: info.lastName,
+                                        birthDate: info.birthDate
+                                    });
                                 }}
                             >
                                 <EditIcon/>
@@ -332,38 +366,56 @@ const UserProfile = ({
                         }
                     </div>
                 )}
-                <Typography className={styles.userInfoSubtitle} style={{marginTop: '8px'}}>{ `Miembro desde el ${parseCreatedAccountDate(createdAt)}`}</Typography>
+                <Typography className={styles.userInfoSubtitle} style={{
+                    marginTop: '8px', color: "#000",
+                    fontFamily: "sans-serif",
+                    fontSize: "18px",
+                    fontStyle: "normal",
+                    fontWeight: 400,
+                    lineHeight: "normal",
+                }}>{`Miembro desde el ${parseCreatedAccountDate(createdAt)}`}</Typography>
             </div>
-            <div >
+            <div>
                 {isCurrentUser ? (
                     <>
-                      <Button
-                          variant="contained"
-                          onClick={onDeleteClick}
-                          className={styles.userActionDeleteButton}
-                          style={{color: '#FFF', backgroundColor: '#EA0E0E', width: '175px'}}
-                          // style={{width: '150px'}}
-                          // color={'error'}
-                      >
-                          Eliminar cuenta
-                      </Button>
-                      {
-                        showDeleteAccountModal &&
-                        <div className={styles.modalBackdrop}>
-                            <DeleteAccountModal
-                                onClose={() => setShowDeleteAccountModal(false)}
-                                handleDeleteAccount={handleDeleteAccount}
-                            />
-                        </div>
-                      }
+                        <Button
+                            variant="contained"
+                            onClick={onDeleteClick}
+                            className={styles.userActionDeleteButton}
+                            style={{color: '#FFF', backgroundColor: '#EA0E0E', width: '175px'}}
+                            // style={{width: '150px'}}
+                            // color={'error'}
+                        >
+                            Eliminar cuenta
+                        </Button>
+                        {
+                            showDeleteAccountModal &&
+                            <div className={styles.modalBackdrop}>
+                                <DeleteAccountModal
+                                    onClose={() => setShowDeleteAccountModal(false)}
+                                    isOpen={showDeleteAccountModal}
+                                    showSnackbar={(message, severity) => {
+                                        setSeverity(severity)
+                                        setMessage(message);
+                                        setOpen(true);
+                                    }}
+                                    userId={userId}
+                                />
+                            </div>
+                        }
                     </>
                 ) : (
-                    <Button
-                        onClick={onFollowClick}
-                        className={styles.userActionFollowButton}
-                    >
-                        Seguir
-                    </Button>
+                    isFollowing === undefined
+                        ? <></>
+                        : isFollowing
+                            ?
+                            <button onClick={onUnfollowClick} className={styles.userActionFollowButton}>
+                                Dejar de seguir
+                            </button>
+                            :
+                            <button onClick={onFollowClick} className={styles.userActionFollowButton}>
+                                Seguir
+                            </button>
                 )}
             </div>
             <Snackbar
@@ -371,7 +423,7 @@ const UserProfile = ({
                 autoHideDuration={5000}
                 onClose={handleCloseSnackbar}
                 TransitionComponent={Slide}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                anchorOrigin={{vertical: 'top', horizontal: 'center'}}
             >
                 <Alert severity={severity}>
                     {message}

@@ -169,11 +169,11 @@ const RequestService = {
 
     },
 
-    filterQuizzes: async (quizFilter) => {
+    filterQuizzes: async (quizFilter, onlyFollowing) => {
         // Codificar los valores de los parámetros en la URL
         const response = await axios.get(
             `${url}/quiz`, {
-                params: quizFilter,
+                params: {...quizFilter, onlyFollowing: onlyFollowing},
                 headers: {
                     'Authorization': 'Bearer ' + Cookies.get('jwt')
                 }
@@ -307,17 +307,11 @@ const RequestService = {
 
     deleteUser: async (userId) => {
         try {
-            const response = await axios.delete(`${url}/user/${userId}`, {
+            return await axios.delete(`${url}/user/${userId}`, {
                 headers: {
                     'Authorization': 'Bearer ' + Cookies.get('jwt')
                 }
             });
-
-            if (response.status === 200) {
-                return response.data;
-            } else {
-                throw new Error("Error al eliminar el usuario");
-            }
         } catch (error) {
             throw error;
         }
@@ -338,17 +332,153 @@ const RequestService = {
                     }
                 }
             );
-            console.log("service")
-            console.log(response)
             if (response.status === 200) {
                 return response.data
             }
         } catch (error) {
-            console.log("service")
-            console.log(error)
             console.error(error);
         }
     },
+
+    getPrivateQuiz: async (invitationCode) => {
+        try {
+            return await axios.get(
+                url + "/quiz/private/" + invitationCode,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    },
+                }
+            );
+        } catch (error) {
+            console.log(error)
+            return error
+        }
+    },
+
+    passwordReset: async (mail) => {
+        try {
+            const response = await axios.post(
+                `${url}/user/password-reset`,
+                {
+                    mail: mail,
+                },
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                }
+            );
+            return response.status;
+        } catch (error) {
+            return error.response.status;
+        }
+    },
+
+    passwordUpdate: async (data) => {
+        try {
+            const response = await axios.put(
+                `${url}/user/password-update`,
+                {
+                    newPassword: data.newPassword,
+                    token: data.token
+                },
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                }
+            );
+            return response.status;
+        } catch (error) {
+            return error.response.status;
+        }
+    },
+
+    deleteQuiz: async (id) => {
+        try {
+            return await axios.delete(`${url}/quiz/${id}`,
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                }
+            );
+        } catch (error) {
+            console.error(error);
+            return error.response;
+        }
+    },
+    followUser: async (id) => {
+        try {
+            const response = await axios.post(`${url}/user/follow/${id}`,
+                {},
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + Cookies.get('jwt')
+                    }
+                });
+        } catch (error) {
+            console.error('Error al seguir el usuario:', error);
+        }
+    },
+
+    unFollowUser: async (id) => {
+        try {
+            const response = await axios.delete(`${url}/user/unfollow/${id}`,
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + Cookies.get('jwt')
+                    }
+                });
+        } catch (error) {
+            console.error('Error al seguir el usuario:', error);
+        }
+    },
+
+    getUserFollowers: async (myId) => {
+        try {
+            const response = await axios.get(`${url}/user/${myId}/following`, {
+                headers: {
+                    'Authorization': 'Bearer ' + Cookies.get('jwt')
+                }
+            });
+            const followingList = response.data;
+            return { followingList };
+        } catch (error) {
+            throw new Error("Error al verificar al obtener la lista de seguidos de un usuario.");
+        }
+    },
+
+    isFollowing: async (id) => {
+        try {
+            const response = await axios.get(`${url}/user/isfollowing/${id}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + Cookies.get('jwt')
+                }
+            });
+            const isFollowing = response.data;
+            console.log(response.data)
+            return {isFollowing};
+        }catch (error) {
+            throw new Error("Error al verificar si el usuario sigue a otro usuario.");
+        }
+    },
+
+    getUserQuizzes: async (userId) => {
+        try {
+            const response = await axios.get(`${url}/quiz?userId=${userId}`,  {
+                headers: {
+                    'Authorization': 'Bearer ' + Cookies.get('jwt')
+                }
+            });
+            if (response.status === 200) {
+                return response.data
+            }
+        }catch (error) {
+            console.error('Error al obtener los quizzes del usuario:', error);
+        }
+    }
 }
 
 export const useRequestService = () => RequestService

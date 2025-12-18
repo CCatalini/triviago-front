@@ -71,7 +71,6 @@ const HomeScreen = () => {
                                     <div className={styles.quizzes}>
                                         {currentPage.content.map((quiz, index) => (
                                             <div key={`${index}-${quiz.title}`} className={styles.quizItem}>
-                                                {console.log(quiz)}
                                                 <QuizPreview {...quiz} commentCount={comments.length} questionCount={quiz.questions?.length}/>
                                             </div>
                                         ))}
