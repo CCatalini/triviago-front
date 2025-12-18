@@ -13,7 +13,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {Button} from "@mui/material";
 import Cookies from "js-cookie";
-import jwt from "jsonwebtoken";
+import jwtDecode from "jwt-decode";
 
 
 const ResponsiveAppBar = () => {
@@ -32,9 +32,24 @@ const ResponsiveAppBar = () => {
 
   const handleProfileClick = () => {
     handleCloseUserMenu();
-      const data = jwt.decode(Cookies.get('jwt'))
-      const id = data.id
+    try {
+      const token = Cookies.get('jwt');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+      const data = jwtDecode(token);
+      const id = data?.id;
+      if (!id) {
+        console.error('No se pudo obtener el ID del usuario del token');
+        router.push('/login');
+        return;
+      }
       router.push(`/user/${id}/profile`);
+    } catch (error) {
+      console.error('Error al decodificar el token:', error);
+      router.push('/login');
+    }
   };
 
   const handleLogoClick = () => {

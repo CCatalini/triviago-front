@@ -6,8 +6,7 @@ import Cookies from "js-cookie";
 import { Button, Slide, Snackbar } from "@mui/material";
 import { Alert } from "@mui/lab";
 import QualificationTable from "@/components/QualificationTable";
-
-const jwt = require('jsonwebtoken');
+import { jwtDecode } from "jwt-decode";
 
 const QuizComents = ({quiz}) => {
     const [comment, setComment] = useState("");
@@ -46,7 +45,7 @@ const QuizComents = ({quiz}) => {
         const trimmedComment = comment.trim();
         if (trimmedComment !== "") {
             if (trimmedComment.length <= 255) {
-                const data = jwt.decode(Cookies.get('jwt'));
+                const data = jwtDecode(Cookies.get('jwt'));
                 const comData = {
                     content: trimmedComment,
                     quizId: quizId,
